@@ -1,6 +1,6 @@
 package com.notes.controller;
 
-import com.notes.Entity.AuthRequest;
+import com.notes.Domain.AuthRequest;
 import com.notes.Entity.UserInfo;
 import com.notes.Service.JwtService;
 import com.notes.Service.UserInfoService;
