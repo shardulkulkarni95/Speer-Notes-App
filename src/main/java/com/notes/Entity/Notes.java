@@ -1,19 +1,20 @@
 package com.notes.Entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
 @Entity
 public class Notes {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	private String note;
 	
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private UserInfo user;
+	private Integer userId;
 
 	public Integer getId() {
 		return id;
@@ -31,15 +32,13 @@ public class Notes {
 		this.note = note;
 	}
 
-	public UserInfo getUser() {
-		return user;
+	public Integer getUserId() {
+		return userId;
 	}
 
-	public void setUser(UserInfo user) {
-		this.user = user;
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 
 	
-	
-
 }

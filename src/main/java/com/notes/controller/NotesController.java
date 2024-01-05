@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.notes.Domain.RestNotes;
+import com.notes.Domain.RestResponse;
 import com.notes.Entity.Notes;
 import com.notes.Service.JwtService;
 import com.notes.Service.NotesService;
@@ -37,51 +38,51 @@ public class NotesController {
 	
 	@GetMapping("/notes")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object getAllNotes(HttpServletRequest httpRequest) {
+	public RestResponse getAllNotes(HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.getAllNotes(username);
 	}
 	
 	@GetMapping("/notes/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object getByNoteId(@PathVariable Integer id, HttpServletRequest httpRequest) {
+	public RestResponse getByNoteId(@PathVariable Integer id, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.getNoteById(username, id);
 	}
 	
 	@PostMapping("/notes")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Object saveNote(@RequestBody RestNotes restNote,HttpServletRequest httpRequest) {
+	public RestResponse saveNote(@RequestBody RestNotes restNote,HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.saveNote(restNote,username);
 	}
 	
 	@PutMapping("/notes/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object updateNote(@PathVariable String id, @RequestBody RestNotes restNote, HttpServletRequest httpRequest) {
+	public RestResponse updateNote(@PathVariable Integer id, @RequestBody RestNotes restNote, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
-		return notesService.updateNote(username,restNote);
+		return notesService.updateNote(id,username,restNote);
 	}
 	
 	@DeleteMapping("/notes/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object deleteNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
+	public RestResponse deleteNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.deleteNote(username,id);
 	}
 	
 	@PostMapping("/notes/{id}/share")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object shareNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
+	public RestResponse shareNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.shareNote(username,id);
 	}
 	
 	@GetMapping("/search")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object searchNotes(@RequestParam String keywords, HttpServletRequest httpRequest) {
+	public RestResponse searchNotes(@RequestParam String q, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
-		return notesService.searchedObject(username,keywords);
+		return notesService.searchedObject(username,q);
 	}
 	
 	

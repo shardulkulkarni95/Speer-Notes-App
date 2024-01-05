@@ -41,21 +41,21 @@ public class NotesService {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Notes notes = new Notes();
 		notes.setNote(restNotes.getNote());
-		notes.setUser(userInfo);
+		notes.setUserId(userInfo.getId());
 		Notes savedNote = notesRepository.save(notes);
 		return new RestResponse(true,savedNote,null);
 	}
 
-	public RestResponse updateNote(String username, RestNotes restNotes) {
+	public RestResponse updateNote(Integer id,String username, RestNotes restNotes) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
-		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(restNotes.getId(), userInfo.getId());
+		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(id,userInfo.getId());
 		if (!byIdAndUserId.isEmpty()) {
 			Notes previousNote = byIdAndUserId.get();
 			previousNote.setNote(restNotes.getNote());
 			Notes updatedNote = notesRepository.save(previousNote);
 			return new RestResponse(true, updatedNote, null);
 		} else {
-			return new RestResponse(false,null,"note not found for user " + username + " with id " + restNotes.getId());
+			return new RestResponse(false,null,"note not found for user " + username + " with id " + id);
 		}
 	}
 
@@ -84,7 +84,7 @@ public class NotesService {
 	
 	public RestResponse searchedObject(String username,String keywords) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
-		List<Notes> matchingNotes = notesRepository.findByUserId(userInfo.getId());
+		List<Notes> matchingNotes = notesRepository.fullTextSearchForUser(userInfo.getId(),keywords);
 		
 		return new RestResponse(true,matchingNotes,null);
 	}
