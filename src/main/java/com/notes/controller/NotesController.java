@@ -51,39 +51,37 @@ public class NotesController {
 	
 	@PostMapping("/notes")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public Object saveNote(@RequestBody RestNotes entity) {
-		//TODO: process POST request
-		
-		return entity;
+	public Object saveNote(@RequestBody RestNotes restNote,HttpServletRequest httpRequest) {
+		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
+		return notesService.saveNote(restNote,username);
 	}
 	
 	@PutMapping("/notes/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object updateNote(@PathVariable String id, @RequestBody RestNotes entity) {
-		//TODO: process PUT request
-		
-		return entity;
+	public Object updateNote(@PathVariable String id, @RequestBody RestNotes restNote, HttpServletRequest httpRequest) {
+		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
+		return notesService.updateNote(username,restNote);
 	}
 	
 	@DeleteMapping("/notes/{id}")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object deleteNote(@PathVariable Integer id) {
-		return null;
+	public Object deleteNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
+		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
+		return notesService.deleteNote(username,id);
 	}
 	
 	@PostMapping("/notes/{id}/share")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object postMethodName(@PathVariable Integer id ) {
-		//TODO: process POST request
-		//: share a note with another user for the authenticated user.
-		
-		return entity;
+	public Object shareNote(@PathVariable Integer id, HttpServletRequest httpRequest) {
+		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
+		return notesService.shareNote(username,id);
 	}
 	
 	@GetMapping("/search")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Object getMethodName(@RequestParam String keywords) {
-		return new SomeData();
+	public Object searchNotes(@RequestParam String keywords, HttpServletRequest httpRequest) {
+		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
+		return notesService.searchedObject(username,keywords);
 	}
 	
 	

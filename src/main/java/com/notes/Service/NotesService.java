@@ -1,11 +1,13 @@
 package com.notes.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.notes.Domain.RestNotes;
+import com.notes.Domain.RestResponse;
 import com.notes.Entity.Notes;
 import com.notes.Entity.UserInfo;
 import com.notes.Repository.NotesRepository;
@@ -20,63 +22,70 @@ public class NotesService {
 	@Autowired
 	private UserInfoRepository userInfoRepository;
 
-	public Object getAllNotes(String username) {
+	public RestResponse getAllNotes(String username) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
-		return notesRepository.findByUserId(userInfo.getId());
+		return new RestResponse(true,notesRepository.findByUserId(userInfo.getId()),null);
 	}
 
-	public Object getNoteById(String username, Integer noteId) {
+	public RestResponse getNoteById(String username, Integer noteId) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(noteId, userInfo.getId());
 		if (!byIdAndUserId.isEmpty()) {
-			return byIdAndUserId.get();
+			return new RestResponse(true,byIdAndUserId.get(),null);
 		} else {
-			return "note not found for user " + username + " with id " + noteId;
+			return new RestResponse(false,null,"note not found for user " + username + " with id " + noteId);
 		}
 	}
 
-	public Object saveNote(RestNotes restNotes, String username) {
+	public RestResponse saveNote(RestNotes restNotes, String username) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Notes notes = new Notes();
 		notes.setNote(restNotes.getNote());
 		notes.setUser(userInfo);
 		Notes savedNote = notesRepository.save(notes);
-		return savedNote;
+		return new RestResponse(true,savedNote,null);
 	}
 
-	public Object updateNote(String username, RestNotes restNotes) {
+	public RestResponse updateNote(String username, RestNotes restNotes) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(restNotes.getId(), userInfo.getId());
 		if (!byIdAndUserId.isEmpty()) {
 			Notes previousNote = byIdAndUserId.get();
 			previousNote.setNote(restNotes.getNote());
 			Notes updatedNote = notesRepository.save(previousNote);
-			return updatedNote;
+			return new RestResponse(true, updatedNote, null);
 		} else {
-			return "note not found for user " + username + " with id " + restNotes.getId();
+			return new RestResponse(false,null,"note not found for user " + username + " with id " + restNotes.getId());
 		}
 	}
 
-	public Object deleteNote(String username, Integer id) {
+	public RestResponse deleteNote(String username, Integer id) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(id, userInfo.getId());
 		if (!byIdAndUserId.isEmpty()) {
 			notesRepository.delete(byIdAndUserId.get());
-			return "note deleted sucessfully!!";
+			return new RestResponse(true,null,"note deleted sucessfully!!");
 		} else {
-			return "note not found for user " + username + " with id " + id;
+			return new RestResponse(false,null,"note not found for user " + username + " with id " + id);
 		}
 
 	}
 
-	public Object shareNote(String username, Integer id) {
+	public RestResponse shareNote(String username, Integer id) {
 		UserInfo userInfo = userInfoRepository.findByName(username).get();
 		Optional<Notes> byIdAndUserId = notesRepository.findByIdAndUserId(id, userInfo.getId());
 		if (!byIdAndUserId.isEmpty()) {
 			Notes sharedNote = byIdAndUserId.get();
-			return sharedNote;
+			return new RestResponse(true,sharedNote,null);
 		} else {
-			return "note not found for user " + username + " with note id " + id;
+			return new RestResponse(false,null,"note not found for user " + username + " with note id " + id);
 		}
+	}
+	
+	public RestResponse searchedObject(String username,String keywords) {
+		UserInfo userInfo = userInfoRepository.findByName(username).get();
+		List<Notes> matchingNotes = notesRepository.findByUserId(userInfo.getId());
+		
+		return new RestResponse(true,matchingNotes,null);
 	}
 }
