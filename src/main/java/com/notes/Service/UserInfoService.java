@@ -25,8 +25,14 @@ public class UserInfoService implements UserDetailsService {
     }
 
     public String addUser(UserInfo userInfo){
-        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-        repository.save(userInfo);
-        return "user added successfully";
+        Optional<UserInfo> byName = repository.findByName(userInfo.getName());
+        if(byName.isEmpty()) {
+            userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+            repository.save(userInfo);
+            return "user added successfully";
+        }else{
+            return "user with name '"+userInfo.getName()+"' already exist";
+        }
+
     }
 }
