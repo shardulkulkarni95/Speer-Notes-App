@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +20,15 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+	@NotBlank(message = "Name is mandatory")
     private String name;
+
+	@NotBlank(message = "email is mandatory")
     private String email;
+
     private String roles;
+
+	@NotBlank(message = "password is mandatory")
     private String password;
 	public String getName() {
 		return name;

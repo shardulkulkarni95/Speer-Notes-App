@@ -4,6 +4,7 @@ import com.notes.Domain.AuthRequest;
 import com.notes.Entity.UserInfo;
 import com.notes.Service.JwtService;
 import com.notes.Service.UserInfoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,24 +24,13 @@ public class UserController {
     @Autowired
     private JwtService jwtService;
 
-
-    @GetMapping("/welcome")
-    public String welcome(){
-        return "hello and welcome to notes app";
-    }
-    
-    @GetMapping("/jwtwelcome")
-    public String welcomeClosed(){
-        return "hello and welcome with jwt";
-    }
-
     @PostMapping("/signup")
-    public String addUser(@RequestBody UserInfo userInfo){
+    public String addUser(@Valid @RequestBody UserInfo userInfo){
         return userInfoService.addUser(userInfo);
     }
 
     @PostMapping("/login")
-    public String addUser(@RequestBody AuthRequest authRequest){
+    public String addUser(@Valid @RequestBody AuthRequest authRequest){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authenticate.isAuthenticated()){
             return jwtService.generateToken(authRequest.getUsername());
