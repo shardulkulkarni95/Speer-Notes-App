@@ -15,9 +15,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = DuplicateUserException.class)
-    public ResponseEntity<Object> throwException(){
+    public String throwException(DuplicateUserException ex){
 
-        return new ResponseEntity<Object>("User Already Exist", HttpStatus.BAD_REQUEST);
+        return "user already exist";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

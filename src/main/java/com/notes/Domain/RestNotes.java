@@ -1,8 +1,10 @@
 package com.notes.Domain;
 
+import jakarta.validation.constraints.NotNull;
+
 public class RestNotes {
 	private Integer id;
-	
+	@NotNull(message = "note can not be empty")
 	private String note;
 
 	public Integer getId() {

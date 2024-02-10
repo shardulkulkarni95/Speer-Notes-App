@@ -1,8 +1,10 @@
 package com.notes.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 @RequestMapping("/api")
+@Validated
 public class NotesController {
 	
 	@Autowired
@@ -52,7 +55,7 @@ public class NotesController {
 	
 	@PostMapping("/notes")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public RestResponse saveNote(@RequestBody RestNotes restNote,HttpServletRequest httpRequest) {
+	public RestResponse saveNote(@Valid @RequestBody RestNotes restNote, HttpServletRequest httpRequest) {
 		String username = jwtService.extractUsername(jwtService.extractJwtTokenFromRequest(httpRequest));
 		return notesService.saveNote(restNote,username);
 	}
