@@ -1,6 +1,7 @@
 package com.notes.Service;
 
 import com.notes.Entity.UserInfo;
+import com.notes.ExceptionHandler.DuplicateUserException;
 import com.notes.Repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,13 +27,12 @@ public class UserInfoService implements UserDetailsService {
 
     public String addUser(UserInfo userInfo){
         Optional<UserInfo> byName = repository.findByName(userInfo.getName());
-        if(byName.isEmpty()) {
-            userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-            repository.save(userInfo);
-            return "user added successfully";
-        }else{
-            return "user with name '"+userInfo.getName()+"' already exist";
+        if(!byName.isEmpty()) {
+            throw new DuplicateUserException();
         }
+        userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
+        repository.save(userInfo);
+        return "user added successfully";
 
     }
 }
