@@ -2,6 +2,7 @@ package com.notes.ExceptionHandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,6 +19,13 @@ public class GlobalExceptionHandler {
     public String throwException(DuplicateUserException ex){
 
         return "user already exist";
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    public String throwException(UsernameNotFoundException ex){
+
+        return "Invalid Username or Password";
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

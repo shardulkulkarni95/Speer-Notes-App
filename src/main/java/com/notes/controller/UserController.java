@@ -1,6 +1,7 @@
 package com.notes.controller;
 
 import com.notes.Domain.AuthRequest;
+import com.notes.Domain.RestResponse;
 import com.notes.Entity.UserInfo;
 import com.notes.Service.JwtService;
 import com.notes.Service.UserInfoService;
@@ -32,10 +33,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String addUser(@Valid @RequestBody AuthRequest authRequest){
+    public RestResponse addUser(@Valid @RequestBody AuthRequest authRequest){
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authenticate.isAuthenticated()){
-            return jwtService.generateToken(authRequest.getUsername());
+            return new RestResponse(true,jwtService.generateToken(authRequest.getUsername()),"Sucess");
         }else {
             throw new UsernameNotFoundException("Invalid Username or Password");
         }
