@@ -38,7 +38,7 @@ public class UserController {
         if (authenticate.isAuthenticated()){
             return new RestResponse(true,jwtService.generateToken(authRequest.getUsername()),"Sucess");
         }else {
-            throw new UsernameNotFoundException("Invalid Username or Password");
+            return new RestResponse(false,null,"Invalid Username or Password");
         }
     }
 
