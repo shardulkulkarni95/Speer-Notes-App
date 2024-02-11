@@ -28,8 +28,8 @@ public class UserController {
     private JwtService jwtService;
 
     @PostMapping("/signup")
-    public String addUser(@Valid @RequestBody UserInfo userInfo){
-        return userInfoService.addUser(userInfo);
+    public RestResponse addUser(@Valid @RequestBody UserInfo userInfo){
+        return new RestResponse(true, userInfoService.addUser(userInfo),"User added");
     }
 
     @PostMapping("/login")

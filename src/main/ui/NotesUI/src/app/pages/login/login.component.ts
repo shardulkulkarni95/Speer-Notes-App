@@ -14,6 +14,13 @@ export class LoginComponent {
     "password": ""
   };
 
+  signupObj: any={
+    "name": "",
+    "email": "",
+    "roles": "user",
+    "password": ""
+  };
+
   constructor(private http: HttpClient, private router: Router) { }
 
 
@@ -25,6 +32,17 @@ export class LoginComponent {
         this.router.navigateByUrl("/dashboard");
       }else{
         alert("Invalid Username or Password");
+      }
+    })
+  }
+
+  onSignUp(){
+    this.http.post("http://localhost:8088/api/auth/signup",this.signupObj).subscribe((res:any)=>{
+      if(res.status){
+        alert(res.massage);
+        this.router.navigateByUrl("/login");
+      }else{
+        alert(res.err);
       }
     })
   }
